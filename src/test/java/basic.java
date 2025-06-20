@@ -34,9 +34,9 @@ public class basic {
 
         //validate that address is successfully updated or not
 
-        given().queryParam("key","qaclick123").queryParam("place_id",placeId).header("content-type","application/json").
+        given().queryParam("key","qaclick123").queryParam("place_id",placeId).
                 when().get("maps/api/place/get/json")
-                .then().assertThat().body("address","70 Summer walk, USA");
+                .then().assertThat().body("address",equalTo("70 Summer walk, USA"));
 
 
 
