@@ -1,6 +1,8 @@
 import files.payload;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import org.testng.Assert;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 public class basic {
@@ -34,15 +36,15 @@ public class basic {
 
         //validate that address is successfully updated or not
 
-        given().queryParam("key","qaclick123").queryParam("place_id",placeId).
-                when().get("maps/api/place/get/json")
-                .then().assertThat().body("address",equalTo("70 Summer walk, USA"));
+        String resp=given().queryParam("key","qaclick123").queryParam("place_id",placeId).
+                when().get("maps/api/place/get/json").
+               // .then().assertThat().body("address",equalTo("70 Summer walk, USA"));
+        then().assertThat().statusCode(200).extract().response().asString();
 
+        JsonPath jsp=new JsonPath(resp);
+        String newaddress=jsp.getString("address");
+        System.out.println(newaddress);
 
-
-
-
-
+        Assert.assertEquals(newaddress,"70 Summer walk, USA");
     }
-
 }
