@@ -1,7 +1,14 @@
 package Oauth_demo;
 
 
+import POJO.getcourses;
+import POJO.webAutomation;
 import io.restassured.path.json.JsonPath;
+import org.testng.Assert;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -19,9 +26,35 @@ public class oauth {
         String token=path.get("access_token");
 
 
-       String res= given().queryParam("access_token",token).when().log().all().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails")
-                .then().assertThat().statusCode(401).extract().asString();
-       System.out.println(res);
+       getcourses res= given().queryParam("access_token",token).when().log().all().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails")
+               .as(getcourses.class);
+       String val=res.getLinkedIn();
+       System.out.println(val);
+
+       //scenario 2" how to find out the price of any course
+
+//       List<Api> cour= res.getCourses().getApi();
+//       for(int i=0;i<cour.size();i++)
+//       {
+//           if(cour.get(i).getCourseTitle().equals("Rest Assured Automation using Java"))
+//           {
+//               System.out.println(cour.get(i).getPrice());
+//
+//           }
+//       }
+       //all course title in webautomation
+        String[] coursetitle={"Selenium Webdriver Javac","Cypress","Protractor"};
+        List<String> a=new ArrayList<>();
+
+      List<webAutomation> webcourse= res.getCourses().getWebAutomation();
+
+       for(int i=0;i<webcourse.size();i++)
+       {
+           a.add(webcourse.get(i).getCourseTitle());
+       }
+       List<String> expectedvalues= Arrays.asList(coursetitle);
+        Assert.assertTrue(a.equals(expectedvalues));
     }
+
 
 }
